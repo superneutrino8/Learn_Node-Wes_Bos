@@ -7,6 +7,6 @@ router.get("/", (req, res) => {
   res.send("Hey! It works!");
 });
 
-router.get("/home/", storeController.homePage);
+router.get("/home/", storeController.myMiddleware, storeController.homePage);
 
 module.exports = router;
