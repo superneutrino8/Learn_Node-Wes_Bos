@@ -1,0 +1,8 @@
+extends layout
+
+include mixins/_storeForm
+
+block content
+    .inner
+        h2(style="text-align: center") #{title}
+        +storeForm({name: 'Tim Hortons!'})

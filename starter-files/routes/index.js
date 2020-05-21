@@ -8,5 +8,7 @@ router.get("/", (req, res) => {
 });
 
 router.get("/home/", storeController.homePage);
+router.get("/add/", storeController.addStorePage);
+router.post("/add/", storeController.createStore);
 
 module.exports = router;
