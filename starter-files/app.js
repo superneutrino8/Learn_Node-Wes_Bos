@@ -58,11 +58,8 @@ app.use((req, res, next) => {
     res.locals.flashes = req.flash();
     res.locals.user = req.user || null;
     res.locals.currentPath = req.path;
-    // console.log("Local: ", res.locals);
     next();
 });
-
-// console.log("Global: ", app.settings);
 
 // promisify some callback based APIs
 app.use((req, res, next) => {
