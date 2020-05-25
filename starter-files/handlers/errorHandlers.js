@@ -68,6 +68,7 @@ exports.developmentErrors = (err, req, res, next) => {
   No stacktraces are leaked to user
 */
 exports.productionErrors = (err, req, res, next) => {
+    console.log("FNB");
     res.status(err.status || 500);
     res.render("error", {
         message: err.message,

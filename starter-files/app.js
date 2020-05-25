@@ -9,9 +9,10 @@ const passport = require("passport");
 const promisify = require("es6-promisify");
 const flash = require("connect-flash");
 const expressValidator = require("express-validator");
-const routes = require("./routes/route");
+const routes = require("./routes/index");
 const helpers = require("./helpers");
 const errorHandlers = require("./handlers/errorHandlers");
+const util = require("util");
 
 // create our Express app
 const app = express();
@@ -28,7 +29,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // Exposes a bunch of methods for validating data. Used heavily on userController.validateRegister
-app.use(expressValidator());
+// app.use(expressValidator());
 
 // populates req.cookies with any cookies that came along with the request
 app.use(cookieParser());
@@ -63,7 +64,7 @@ app.use((req, res, next) => {
 
 // promisify some callback based APIs
 app.use((req, res, next) => {
-    req.login = promisify(req.login, req);
+    req.login = util.promisify(req.login, req);
     next();
 });
 
