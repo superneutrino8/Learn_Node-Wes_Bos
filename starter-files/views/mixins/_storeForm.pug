@@ -5,9 +5,11 @@ mixin storeForm(store = {})
         label(for="description") Description
         textarea(name="description")
         - const choices = ['WiFi', 'Open Late', 'Family Friendly', 'Vegetrain', 'Licensed']
+        br
+        br
         ul.tags
             each choice in choices
                 .tag.tag__choice
                     input(type="checkbox" id=choice name="tags" value=choice)
                     label(for=choice) #{choice}
-        input(type="submit" value=" Save -> " class="button")
+        input(type="submit" value=" Save " class="button")
