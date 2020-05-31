@@ -3,10 +3,13 @@ const autocomplete = (input, latInput, lngInput) => {
 
     const dropDown = new google.maps.places.Autocomplete(input);
 
+    console.log(dropDown);
+
     dropDown.addListener("place_changed", () => {
         const place = dropDown.getPlace();
         latInput.value = place.geometry.location.lat();
         lngInput.value = place.geometry.location.lng();
+        console.log(place);
     });
 
     input.on("keydown", (e) => {

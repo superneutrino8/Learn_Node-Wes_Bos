@@ -6,6 +6,7 @@ const path = require("path");
 const webpack = require("webpack");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const autoprefixer = require("autoprefixer");
+const TerserPlugin = require("terser-webpack-plugin");
 /*
   webpack sees every file as a module.
   How to handle those files is up to loaders.
@@ -18,7 +19,7 @@ const javascript = {
     use: [
         {
             loader: "babel-loader",
-            options: { presets: ["env"] }, // this is one way of passing options
+            options: { presets: ["@babel/preset-env"] }, // this is one way of passing options
         },
     ],
 };
@@ -31,7 +32,7 @@ const postcss = {
     loader: "postcss-loader",
     options: {
         plugins() {
-            return [autoprefixer({ browsers: "last 3 versions" })];
+            return [autoprefixer({ overrideBrowserslist: "last 3 versions" })];
         },
     },
 };
@@ -50,10 +51,10 @@ const styles = {
 };
 
 // We can also use plugins - this one will compress the crap out of our JS
-const uglify = new webpack.optimize.UglifyJsPlugin({
-    // eslint-disable-line
-    compress: { warnings: false },
-});
+// const uglify = new webpack.optimize.UglifyJsPlugin({
+//     // eslint-disable-line
+//     compress: { warnings: false },
+// });
 
 // OK - now it's time to put it all together
 const config = {
@@ -61,6 +62,7 @@ const config = {
         // we only have 1 entry, but I've set it up for multiple in the future
         App: "./public/javascripts/delicious-app.js",
     },
+    mode: "development",
     // we're using sourcemaps and here is where we specify which kind of sourcemap to use
     devtool: "source-map",
     // Once things are done, we kick it out to a file.
@@ -83,6 +85,18 @@ const config = {
         // here is where we tell it to output our css to a separate file
         new ExtractTextPlugin("style.css"),
     ],
+    optimization: {
+        minimizer: [
+            new TerserPlugin({
+                cache: true,
+                parallel: true,
+                sourceMap: true, // Must be set to true if using source-maps in production
+                terserOptions: {
+                    // https://github.com/webpack-contrib/terser-webpack-plugin#terseroptions
+                },
+            }),
+        ],
+    },
 };
 // webpack is cranky about some packages using a soon to be deprecated API. shhhhhhh
 process.noDeprecation = true;
