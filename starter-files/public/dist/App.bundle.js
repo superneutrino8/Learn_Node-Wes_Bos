@@ -102,7 +102,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-console.log("object");
 Object(_modules_autocomplete__WEBPACK_IMPORTED_MODULE_2__["default"])(Object(_modules_bling__WEBPACK_IMPORTED_MODULE_1__["$"])("#address"), Object(_modules_bling__WEBPACK_IMPORTED_MODULE_1__["$"])("#lat"), Object(_modules_bling__WEBPACK_IMPORTED_MODULE_1__["$"])("#lng"));
 
 /***/ }),
@@ -119,7 +118,6 @@ __webpack_require__.r(__webpack_exports__);
 var autocomplete = function autocomplete(input, latInput, lngInput) {
   if (!input) return;
   var dropDown = new google.maps.places.Autocomplete(input);
-  console.log(dropDown);
   dropDown.addListener("place_changed", function () {
     var place = dropDown.getPlace();
     latInput.value = place.geometry.location.lat();
