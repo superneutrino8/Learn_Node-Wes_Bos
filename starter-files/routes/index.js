@@ -20,4 +20,6 @@ router.post(
     catchErrors(storeController.updateStore)
 );
 
+router.get("/store/:slug", catchErrors(storeController.getStoreBySlug));
+
 module.exports = router;
