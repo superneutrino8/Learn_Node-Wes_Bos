@@ -22,4 +22,7 @@ router.post(
 
 router.get("/store/:slug", catchErrors(storeController.getStoreBySlug));
 
+router.get("/tags/", catchErrors(storeController.getStoreByTags));
+router.get("/tags/:tag", catchErrors(storeController.getStoreByTags));
+
 module.exports = router;
