@@ -26,6 +26,7 @@ router.get("/store/:slug", catchErrors(storeController.getStoreBySlug));
 router.get("/tags/", catchErrors(storeController.getStoreByTags));
 router.get("/tags/:tag", catchErrors(storeController.getStoreByTags));
 
-router.get('/login', userController.loginUser)
+router.get("/login", userController.loginUser);
+router.get("/register", userController.registerUser);
 
 module.exports = router;
