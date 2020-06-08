@@ -28,6 +28,9 @@ router.get("/tags/", catchErrors(storeController.getStoreByTags));
 router.get("/tags/:tag", catchErrors(storeController.getStoreByTags));
 
 router.get("/login", userController.loginUser);
+router.post("/login", authController.login);
+
+router.get("/logout", authController.logout);
 
 router.get("/register", userController.registerUser);
 router.post(
