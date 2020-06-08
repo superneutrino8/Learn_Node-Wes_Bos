@@ -7,3 +7,35 @@ exports.loginUser = (req, res) => {
 exports.registerUser = (req, res) => {
     res.render("register", { title: "Register" });
 };
+
+exports.validateUser = (req, res, next) => {
+    req.sanitizeBody("name");
+    req.checkBody("name", "You must supply a name").notEmpty();
+    req.checkBody("email", "That Email is not valid!").isEmail();
+    req.sanitizeBody("email").normalizeEmail({
+        remove_dots: false,
+        remove_extension: false,
+        gmail_remove_subaddress: false,
+    });
+    req.checkBody("password", "Password cannot be blank").notEmpty();
+    req.checkBody(
+        "password-confirm",
+        "Confirm Password cannot be blank"
+    ).notEmpty();
+    req.checkBody("password-confirm", "Opps! Password do not match").equals(
+        req.body.password
+    );
+
+    const errors = req.validationErrors();
+    if (errors) {
+        req.flash(
+            "error",
+            errors.map((err) => err.msg)
+        );
+        res.render("register", {
+            body: req.body,
+            title: "Register",
+            flashes: req.flash(),
+        });
+    }
+};
