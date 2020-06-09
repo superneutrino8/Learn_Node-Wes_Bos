@@ -40,4 +40,7 @@ router.post(
     authController.login
 );
 
+router.get("/account", authController.isLoggedIn, userController.account);
+router.post("/account", catchErrors(userController.updateUser));
+
 module.exports = router;
