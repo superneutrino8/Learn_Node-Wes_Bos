@@ -3495,16 +3495,72 @@ NodeList.prototype.on = NodeList.prototype.addEventListener = function (name, fn
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _bling__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./bling */ "./public/javascripts/modules/bling.js");
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
+
+var mapOptions = {
+  center: {
+    lat: 43.2,
+    lng: -79.8
+  },
+  zoom: 10
+};
 
 function loadPlaces(map) {
-  var lat = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 43.2;
-  var lng = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : -79.8;
+  var lng = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 43.2;
+  var lat = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : -79.8;
+  axios__WEBPACK_IMPORTED_MODULE_0___default.a.get("/api/stores/near?lng=".concat(lng, "&lat=").concat(lat)).then(function (res) {
+    var places = res.data;
+
+    if (!places.length) {
+      alert("No Place Found!");
+      return;
+    } // bounds for map centering
+
+
+    var bounds = new google.maps.LatLngBounds();
+    var markers = places.map(function (place) {
+      var _place$location$coord = _slicedToArray(place.location.coordinates, 2),
+          placeLng = _place$location$coord[0],
+          placeLat = _place$location$coord[1];
+
+      var position = {
+        lat: placeLat,
+        lng: placeLng
+      };
+      bounds.extend(position);
+      var marker = new google.maps.Marker({
+        map: map,
+        position: position
+      });
+      marker.place = place;
+      return marker;
+    }); // zoom the map to fit marker
+
+    map.setCenter(bounds.getCenter());
+    map.fitBounds(bounds);
+  });
 }
 
 function makeMap(mapDiv) {
-  if (!mapDiv) return;
-  console.log(mapDiv);
+  if (!mapDiv) return; // adding map
+
+  var map = new google.maps.Map(mapDiv, mapOptions);
+  loadPlaces(map);
+  var input = Object(_bling__WEBPACK_IMPORTED_MODULE_1__["$"])('[name="geolocation"]');
+  var autocomplete = new google.maps.places.Autocomplete(input);
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (makeMap);
