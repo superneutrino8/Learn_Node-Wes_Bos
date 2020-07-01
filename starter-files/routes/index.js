@@ -51,7 +51,9 @@ router.post(
     authController.checkPasswords,
     catchErrors(authController.update)
 );
+router.get("/map", storeController.mapPage);
 
+// API
 router.get("/api/search", storeController.search);
 router.get("/api/stores/near", catchErrors(storeController.mapStores));
 
