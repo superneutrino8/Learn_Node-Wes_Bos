@@ -3531,6 +3531,7 @@ function loadPlaces(map) {
 
 
     var bounds = new google.maps.LatLngBounds();
+    var infoWindow = new google.maps.InfoWindow();
     var markers = places.map(function (place) {
       var _place$location$coord = _slicedToArray(place.location.coordinates, 2),
           placeLng = _place$location$coord[0],
@@ -3547,6 +3548,14 @@ function loadPlaces(map) {
       });
       marker.place = place;
       return marker;
+    }); // infowindow popup
+
+    markers.forEach(function (marker) {
+      return marker.addListener("click", function () {
+        var html = "\n                    <div class=\"popup\">\n                        <a href=\"/store/".concat(this.place.slug, "\">\n                        <img src=\"/uploads/").concat(this.place.photo || "store.png", "\" alt=\"").concat(this.place.name, "\" />\n                        <p>").concat(this.place.name, " - ").concat(this.place.location.address, "</p>\n                </a>\n                    </div>\n                ");
+        infoWindow.setContent(html);
+        infoWindow.open(map, this);
+      });
     }); // zoom the map to fit marker
 
     map.setCenter(bounds.getCenter());
@@ -3561,6 +3570,10 @@ function makeMap(mapDiv) {
   loadPlaces(map);
   var input = Object(_bling__WEBPACK_IMPORTED_MODULE_1__["$"])('[name="geolocation"]');
   var autocomplete = new google.maps.places.Autocomplete(input);
+  autocomplete.addListener("place_changed", function () {
+    var place = autocomplete.getPlace();
+    loadPlaces(map, place.geometry.location.lat(), place.geometry.location.lng());
+  });
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (makeMap);

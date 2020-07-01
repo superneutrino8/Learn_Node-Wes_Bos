@@ -16,6 +16,7 @@ function loadPlaces(map, lng = 43.2, lat = -79.8) {
 
         // bounds for map centering
         const bounds = new google.maps.LatLngBounds();
+        const infoWindow = new google.maps.InfoWindow();
 
         const markers = places.map((place) => {
             const [placeLng, placeLat] = place.location.coordinates;
@@ -28,6 +29,25 @@ function loadPlaces(map, lng = 43.2, lat = -79.8) {
             marker.place = place;
             return marker;
         });
+
+        // infowindow popup
+        markers.forEach((marker) =>
+            marker.addListener("click", function() {
+                const html = `
+                    <div class="popup">
+                        <a href="/store/${this.place.slug}">
+                        <img src="/uploads/${this.place.photo ||
+                            "store.png"}" alt="${this.place.name}" />
+                        <p>${this.place.name} - ${
+                    this.place.location.address
+                }</p>
+                </a>
+                    </div>
+                `;
+                infoWindow.setContent(html);
+                infoWindow.open(map, this);
+            })
+        );
 
         // zoom the map to fit marker
         map.setCenter(bounds.getCenter());
@@ -42,6 +62,14 @@ function makeMap(mapDiv) {
     loadPlaces(map);
     const input = $('[name="geolocation"]');
     const autocomplete = new google.maps.places.Autocomplete(input);
+    autocomplete.addListener("place_changed", () => {
+        const place = autocomplete.getPlace();
+        loadPlaces(
+            map,
+            place.geometry.location.lat(),
+            place.geometry.location.lng()
+        );
+    });
 }
 
 export default makeMap;
