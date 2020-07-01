@@ -53,5 +53,6 @@ router.post(
 );
 
 router.get("/api/search", storeController.search);
+router.get("/api/stores/near", catchErrors(storeController.mapStores));
 
 module.exports = router;

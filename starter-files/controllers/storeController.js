@@ -120,3 +120,11 @@ exports.search = async (req, res) => {
         .limit(5);
     res.json(stores);
 };
+
+exports.mapStores = async (req, res) => {
+    const coordinates = [req.query.lat, req.query.lng].map(parseFloat);
+    const q = {};
+
+    const stores = await Store.find(q);
+    res.json(stores);
+};
