@@ -52,6 +52,7 @@ router.post(
     catchErrors(authController.update)
 );
 router.get("/map", storeController.mapPage);
+router.get("/hearts", catchErrors(storeController.hearts));
 
 // API
 router.get("/api/search", storeController.search);
