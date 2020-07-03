@@ -1,4 +1,4 @@
-const mongoose = require("mongoose-mongodb-errors");
+const mongoose = require("mongoose");
 mongoose.Promise = global.Promise;
 
 const reviewSchema = new mongoose.Schema({
