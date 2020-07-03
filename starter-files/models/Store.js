@@ -2,45 +2,51 @@ const mongoose = require("mongoose");
 mongoose.Promise = global.Promise;
 const slug = require("slugs");
 
-const storeSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        trim: true,
-        required: "Please enter a store name!",
-    },
-    slug: String,
-    description: {
-        type: String,
-        trim: true,
-    },
-    tags: [String],
-    created: {
-        type: Date,
-        default: Date.now,
-    },
-    location: {
-        type: {
+const storeSchema = new mongoose.Schema(
+    {
+        name: {
             type: String,
-            default: "Point",
+            trim: true,
+            required: "Please enter a store name!",
         },
-        address: {
+        slug: String,
+        description: {
             type: String,
-            required: "Please supply the Address!",
+            trim: true,
         },
-        coordinates: [
-            {
-                type: Number,
-                required: "PLease supply the Coordinates!",
+        tags: [String],
+        created: {
+            type: Date,
+            default: Date.now,
+        },
+        location: {
+            type: {
+                type: String,
+                default: "Point",
             },
-        ],
+            address: {
+                type: String,
+                required: "Please supply the Address!",
+            },
+            coordinates: [
+                {
+                    type: Number,
+                    required: "PLease supply the Coordinates!",
+                },
+            ],
+        },
+        photo: String,
+        author: {
+            type: mongoose.Schema.ObjectId,
+            ref: "User",
+            required: "Please supply an Author!",
+        },
     },
-    photo: String,
-    author: {
-        type: mongoose.Schema.ObjectId,
-        ref: "User",
-        required: "Please supply an Author!",
-    },
-});
+    {
+        toJSON: { virtuals: true },
+        toObject: { virtuals: true },
+    }
+);
 
 storeSchema.index({
     name: "text",
@@ -77,5 +83,11 @@ storeSchema.statics.getTagList = function() {
         { $sort: { count: -1, _id: 1 } },
     ]);
 };
+
+storeSchema.virtual("reviews", {
+    ref: "Review",
+    localField: "_id",
+    foreignField: "store",
+});
 
 module.exports = mongoose.model("Store", storeSchema);
