@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 mongoose.Promise = global.Promise;
 const slug = require("slugs");
+const { exists } = require("./User");
 
 const storeSchema = new mongoose.Schema(
     {
@@ -87,7 +88,20 @@ storeSchema.statics.getTagList = function() {
 storeSchema.statics.getTopStores = function() {
     return this.aggregate([
         // lookup stores and populate their reviews
+        {
+            $lookup: {
+                from: "reviews",
+                localField: "_id",
+                foreignField: "store",
+                as: "reviews",
+            },
+        },
         // filter for only items that have 2 or more reviews
+        {
+            $match: {
+                "reviews.1": { $exists: true },
+            },
+        },
         // Add the average revies field
         // sort it by our new field, highest reviews first
         // limi to at most 10
