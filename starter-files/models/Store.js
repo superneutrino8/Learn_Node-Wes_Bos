@@ -103,8 +103,22 @@ storeSchema.statics.getTopStores = function() {
             },
         },
         // Add the average revies field
+
+        {
+            $addFields: {
+                averageRating: { $avg: "$reviews.rating" },
+            },
+        },
         // sort it by our new field, highest reviews first
+        {
+            $sort: {
+                averageRating: -1,
+            },
+        },
         // limi to at most 10
+        {
+            $limit: 10,
+        },
     ]);
 };
 
@@ -113,5 +127,13 @@ storeSchema.virtual("reviews", {
     localField: "_id",
     foreignField: "store",
 });
+
+function autopopulate(next) {
+    this.populate("reviews");
+    next();
+}
+
+storeSchema.pre("find", autopopulate);
+storeSchema.pre("findOne", autopopulate);
 
 module.exports = mongoose.model("Store", storeSchema);
