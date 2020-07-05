@@ -84,6 +84,16 @@ storeSchema.statics.getTagList = function() {
     ]);
 };
 
+storeSchema.statics.getTopStores = function() {
+    return this.aggregate([
+        // lookup stores and populate their reviews
+        // filter for only items that have 2 or more reviews
+        // Add the average revies field
+        // sort it by our new field, highest reviews first
+        // limi to at most 10
+    ]);
+};
+
 storeSchema.virtual("reviews", {
     ref: "Review",
     localField: "_id",
